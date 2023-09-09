@@ -11,6 +11,7 @@ const router = createRouter({
     { path: '/teams', component: TeamList },
     { path: '/users', component: UsersList },
   ],
+  linkActiveClass: 'active',
 });
 
 const app = createApp(App);
