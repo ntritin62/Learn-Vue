@@ -53,6 +53,10 @@ router.beforeEach(function (to, from, next) {
   next();
 });
 
+// router.afterEach(function (to, from) {
+
+// });
+
 const app = createApp(App);
 
 app.use(router);
