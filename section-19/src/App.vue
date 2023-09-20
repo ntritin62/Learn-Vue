@@ -22,9 +22,12 @@ export default {
     //   name: 'Tin',
     //   age: 21,
     // });
-
     const uName = computed(() => {
       return firstName.value + ' ' + lastName.value;
+    });
+
+    watch([uAge, uName], (newValues, oldValues) => {
+      clg;
     });
 
     function setNewAge() {
