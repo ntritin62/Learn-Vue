@@ -1,17 +1,10 @@
 <template>
   <base-container>
     <h2>Active Users</h2>
-    <base-search
-      @search="updateSearch"
-      :search-term="enteredSearchTerm"
-    ></base-search>
+    <base-search @search="updateSearch" :search-term="enteredSearchTerm"></base-search>
     <div>
-      <button @click="sort('asc')" :class="{ selected: sorting === 'asc' }">
-        Sort Ascending
-      </button>
-      <button @click="sort('desc')" :class="{ selected: sorting === 'desc' }">
-        Sort Descending
-      </button>
+      <button @click="sort('asc')" :class="{selected: sorting === 'asc'}">Sort Ascending</button>
+      <button @click="sort('desc')" :class="{selected: sorting === 'desc'}">Sort Descending</button>
     </div>
     <ul>
       <user-item
@@ -26,8 +19,10 @@
 </template>
 
 <script>
+import { ref, computed, watch } from 'vue';
+
 import UserItem from './UserItem.vue';
-import { ref, watch, computed } from 'vue';
+
 export default {
   components: {
     UserItem,
@@ -40,7 +35,7 @@ export default {
 
     const availableUsers = computed(function () {
       let users = [];
-      if (props.activeSearchTerm) {
+      if (activeSearchTerm.value) {
         users = props.users.filter((usr) =>
           usr.fullName.includes(activeSearchTerm.value)
         );
@@ -50,12 +45,19 @@ export default {
       return users;
     });
 
+    watch(enteredSearchTerm, function (newValue) {
+      setTimeout(() => {
+        if (newValue === enteredSearchTerm.value) {
+          activeSearchTerm.value = newValue;
+        }
+      }, 300);
+    });
+
     function updateSearch(val) {
       enteredSearchTerm.value = val;
     }
 
     const sorting = ref(null);
-
     const displayedUsers = computed(function () {
       if (!sorting.value) {
         return availableUsers.value;
@@ -72,23 +74,17 @@ export default {
         }
       });
     });
+
     function sort(mode) {
       sorting.value = mode;
     }
-    watch(enteredSearchTerm, function (newValue) {
-      setTimeout(() => {
-        if (newValue === enteredSearchTerm.value) {
-          activeSearchTerm.value = newValue;
-        }
-      }, 300);
-    });
 
     return {
       enteredSearchTerm,
       updateSearch,
-      sorting,
-      sort,
       displayedUsers,
+      sorting,
+      sort
     };
   },
   // data() {
@@ -99,23 +95,33 @@ export default {
   //   };
   // },
   // computed: {
-  //   // availableUsers() {},
-  //   // displayedUsers() {
-  //   //   if (!this.sorting) {
-  //   //     return this.availableUsers;
-  //   //   }
-  //   //   return this.availableUsers.slice().sort((u1, u2) => {
-  //   //     if (this.sorting === 'asc' && u1.fullName > u2.fullName) {
-  //   //       return 1;
-  //   //     } else if (this.sorting === 'asc') {
-  //   //       return -1;
-  //   //     } else if (this.sorting === 'desc' && u1.fullName > u2.fullName) {
-  //   //       return -1;
-  //   //     } else {
-  //   //       return 1;
-  //   //     }
-  //   //   });
-  //   // },
+  //   availableUsers() {
+  //     let users = [];
+  //     if (this.activeSearchTerm) {
+  //       users = this.users.filter((usr) =>
+  //         usr.fullName.includes(this.activeSearchTerm)
+  //       );
+  //     } else if (this.users) {
+  //       users = this.users;
+  //     }
+  //     return users;
+  //   },
+  //   displayedUsers() {
+  //     if (!this.sorting) {
+  //       return this.availableUsers;
+  //     }
+  //     return this.availableUsers.slice().sort((u1, u2) => {
+  //       if (this.sorting === 'asc' && u1.fullName > u2.fullName) {
+  //         return 1;
+  //       } else if (this.sorting === 'asc') {
+  //         return -1;
+  //       } else if (this.sorting === 'desc' && u1.fullName > u2.fullName) {
+  //         return -1;
+  //       } else {
+  //         return 1;
+  //       }
+  //     });
+  //   },
   // },
   // methods: {
   //   updateSearch(val) {
@@ -132,7 +138,7 @@ export default {
   //         this.activeSearchTerm = val;
   //       }
   //     }, 300);
-  //   },
+  //   }
   // },
 };
 </script>
