@@ -48,7 +48,7 @@ export default {
     });
 
     watch(user, function () {
-      enteredSearchTerm.value = '';
+      updateSearch('');
     });
 
     return {
